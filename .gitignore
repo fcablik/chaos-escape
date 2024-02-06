@@ -1,0 +1,30 @@
+node_modules
+.DS_store
+
+/build
+/public/build
+/server-build
+.env
+
+/prisma/data.db
+/prisma/data.db-journal
+/tests/prisma
+
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/tests/fixtures/email/
+/coverage
+
+/other/cache.db
+
+# Easy way to create temporary files/folders that won't accidentally be added to git
+*.local.*
+
+# backups that should not be contained in public/private github folders, and should not be deployed, this way I can switch routes' components for different kinds of apps and keep all of the possible routes and components in-house locally in each project
+.backups
+
+# this is a component for local testing purposes
+/app/components/.testing-components.tsx
+
+/.designs

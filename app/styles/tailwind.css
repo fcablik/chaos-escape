@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	:root {
+		--font-sans: Nunito Sans, Nunito Sans Fallback;
+		/* --font-mono: here if you got it... */
+
+		/* prefixed with foreground because it should look good on the background */
+		--foreground-destructive: 345, 82.7%, 4.8%;
+
+		--background: 0 0% 100%;
+		--foreground: 0 5% 8%;
+
+		--background-bases: 0 0% 100%; /* !headers/footers/sidebars/menus ' bg... */
+
+		--bg-component: 0 0% 100%;
+		--bg-component-light: 189 18% 92%;
+		--fg-component: 0 0% 21%;
+		--bg-gradient-start: 192 19% 95%;
+		--bg-gradient-end: 192 18% 89%;
+
+		--background-dashboard: 0 0% 97%;
+
+		--muted: 210, 40%, 93%;
+		--muted-foreground: 215.4, 16.3%, 30%;
+
+		--popover: 0, 0%, 100%;
+		--popover-foreground: 222.2, 84%, 4.9%;
+
+		--card: 0, 0%, 100%;
+		--card-foreground: 222.2, 84%, 4.9%;
+
+		--border: 214.3, 31.8%, 91.4%;
+		--input: 214.3, 31.8%, 91.4%;
+		--input-invalid: 0, 84.2%, 6.2%;
+
+		--primary: 222.2, 47.4%, 11.2%;
+		--primary-foreground: 210, 40%, 98%;
+
+		--secondary: 210, 20%, 83%;
+		--secondary-foreground: 222.2 47.4% 11.2%;
+
+		/* --highlight: 0 5% 8%; */
+		--highlight: 71 78% 62%;
+		--highlight-foreground: 0 5% 8%;
+
+		--accent: 210, 40%, 90%;
+		--accent-foreground: 222.2, 47.4%, 11.2%;
+
+		--destructive: 0 76% 58%;
+		--destructive-foreground: 0 0% 100%;
+
+		--accepted: 111 55% 40%;
+		--accepted-foreground: 0 0% 100%;
+
+		--ring: 215, 2.2%, 65.1%;
+
+		--radius: 0.5rem;
+	}
+
+	.dark {
+		--background: 0 5% 8%;
+		--background-bases: 180 3, 6%; /* !headers/footers/sidebars/menus ' bg... */
+		--foreground: 0 0% 100%;
+		
+		/* main blocks & components */
+		--bg-component: 0 5% 8%;
+		--bg-component-light: 0 0% 21%;
+		--fg-component: 0 0% 100%;
+		--bg-gradient-start: 0 0% 5%;
+		--bg-gradient-end: 192 12% 17%;
+		--background-dashboard: 0 7% 5%;
+
+		--foreground-destructive: -4, 84%, 60%;
+
+		--muted: 217.2, 32.6%, 12%;
+		--muted-foreground: 215, 2.2%, 65.1%;
+
+		--popover: 222.2, 84%, 4.9%;
+		--popover-foreground: 210, 40%, 98%;
+
+		--card: 222.2, 84%, 4.9%;
+		--card-foreground: 210, 40%, 98%;
+
+		--border: 217.2, 32.6%, 17.5%;
+		--input: 217.2, 32.6%, 17.5%;
+		--input-invalid: 0, 62.8%, 3.6%;
+
+		--primary: 210, 40%, 98%;
+		--primary-foreground: 222.2, 47.4%, 11.2%;
+
+		--secondary: 217.2, 20%, 24%;
+		--secondary-foreground: 210, 40%, 98%;
+
+		--accent: 217.2, 32.6%, 10%;
+		--accent-foreground: 210, 40%, 98%;
+
+		--ring: 217.2, 32.6%, 60%;
+	}
+}
+
+@layer base {
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+}
