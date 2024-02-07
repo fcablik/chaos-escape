@@ -1,7 +1,6 @@
 import { json, type DataFunctionArgs, type MetaFunction } from '@remix-run/node'
 import {
 	Link,
-	redirect,
 	useLoaderData,
 	useNavigate,
 	useSearchParams,
@@ -15,7 +14,6 @@ import { SearchBar } from '#app/components/search-bar.tsx'
 import { Button } from '#app/components/ui/button.tsx'
 import { prisma } from '#app/utils/db.server.ts'
 import { cn, useDelayedIsPending } from '#app/utils/misc.tsx'
-import { useRedirectWithScrollToTop } from '#app/components/modal-animation.tsx'
 
 const SearchResultSchema = z.object({
 	id: z.string(),
