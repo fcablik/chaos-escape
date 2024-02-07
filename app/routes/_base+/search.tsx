@@ -28,7 +28,7 @@ const SearchResultSchema = z.object({
 
 const SearchResultsSchema = z.array(SearchResultSchema)
 
-export async function loader({ request, params }: DataFunctionArgs) {
+export async function loader({ request }: DataFunctionArgs) {
 	const searchTerm = new URL(request.url).searchParams.get('search')
 	if (searchTerm === '') {
 		return redirect('/search')
@@ -67,7 +67,7 @@ export async function loader({ request, params }: DataFunctionArgs) {
 	return json({ status: 'idle', searchResults: result.data } as const)
 }
 
-export default function CarBrandUrlRoute() {
+export default function GlobalSearch() {
 	const data = useLoaderData<typeof loader>()
 
 	//TODO: implement search & query logic of load

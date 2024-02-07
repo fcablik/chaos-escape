@@ -291,6 +291,19 @@ export default function AdminRoute() {
 												icon="file-text"
 											/>
 											<SidebarNavLink
+												routeName="brands"
+												icon="file-text"
+											/>
+											<SidebarNavLink
+												routeName="models"
+												icon="file-text"
+											/>
+											<SidebarNavLink
+												routeName="dealers"
+												icon="file-text"
+											/>
+											
+											<SidebarNavLink
 												routeName="pages"
 												icon="file-text"
 												classList="lg:hidden"

@@ -16,6 +16,7 @@ import {
 	Scripts,
 	ScrollRestoration,
 	useLoaderData,
+	useLocation,
 	useMatches,
 } from '@remix-run/react'
 import { withSentry } from '@sentry/remix'
@@ -23,6 +24,7 @@ import { AuthenticityTokenProvider } from 'remix-utils/csrf/react'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
 import { z } from 'zod'
 import { Confetti } from './components/confetti.tsx'
+import { CustomScrollRestoration } from './components/custom-scroll-restoration.tsx'
 import { GeneralErrorBoundary } from './components/error-boundary.tsx'
 import { FooterBase } from './components/footers/footer-base.tsx'
 import { HeaderBase } from './components/headers/header-base.tsx'
@@ -194,16 +196,22 @@ function Document({
 	theme?: Theme
 	env?: Record<string, string>
 }) {
+	const { pathname } = useLocation()
+	const paths = ['/', '', '/?search=']
+
 	return (
 		<html lang="en" className={`${theme} h-full overflow-x-hidden`}>
 			<head>
 				<ClientHintCheck nonce={nonce} />
 				<Meta />
 				<meta charSet="utf-8" />
-				<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+				<meta
+					name="viewport"
+					content="width=device-width,initial-scale=1,maximum-scale=1"
+				/>
 				<Links />
 			</head>
-			<body className='max-2xl:text-body-base'>
+			<body className="max-2xl:text-body-base">
 				{children}
 				<script
 					nonce={nonce}
@@ -211,7 +219,11 @@ function Document({
 						__html: `window.ENV = ${JSON.stringify(env)}`,
 					}}
 				/>
-				<ScrollRestoration nonce={nonce} />
+				{paths.includes(pathname) ? (
+					<CustomScrollRestoration />
+				) : (
+					<ScrollRestoration nonce={nonce} />
+				)}
 				<Scripts nonce={nonce} />
 				<LiveReload nonce={nonce} />
 			</body>
@@ -232,7 +244,7 @@ function App() {
 		<Document nonce={nonce} theme={theme} env={data.ENV}>
 			<HeaderBase routeAdmin={routeAdmin} />
 
-			<div className='bg-main-gradient-light dark:bg-main-gradient-dark main-custom-height'>
+			<div className="main-custom-height bg-main-gradient-light dark:bg-main-gradient-dark">
 				<Outlet />
 			</div>
 

@@ -68,6 +68,21 @@ export function HeaderBase({ routeAdmin }: { routeAdmin?: boolean }) {
 									)}
 								</NavLink>
 
+								<NavLink to="dealers">
+									{({ isActive }) => (
+										<>
+											<Button
+												variant={isActive ? 'highlight' : 'secondary'}
+												className="max-md:hidden"
+											>
+												dealers
+											</Button>
+
+											<Icon size="lg" className={cn(isActive && "text-purple-500", "md:hidden")} name="file-text" />
+										</>
+									)}
+								</NavLink>
+
 								<NavLink to="pages">
 									{({ isActive }) => (
 										<>

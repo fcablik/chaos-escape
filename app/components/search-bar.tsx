@@ -10,10 +10,10 @@ export function SearchBar({
 	actionUrl,
 	status,
 	autoFocus = false,
-	autoSubmit = false,
+	autoSubmit = false, //hides the search status button if True
 	carModelUrl,
 }: {
-	actionUrl: 'search' | 'brands' | 'admin/users' | 'pages' | 'carmodels'
+	actionUrl: '' | 'search' | 'brands' | 'admin/users' | 'pages' | 'carmodels'
 	status: 'idle' | 'pending' | 'success' | 'error'
 	autoFocus?: boolean
 	autoSubmit?: boolean
@@ -55,17 +55,19 @@ export function SearchBar({
 					autoFocus={autoFocus}
 				/>
 			</div>
-			<div>
-				<StatusButton
-					type="submit"
-					status={isSubmitting ? 'pending' : status}
-					className="flex w-full items-center justify-center"
-					size="sm"
-				>
-					<Icon name="magnifying-glass" size="sm" />
-					<span className="sr-only">Search</span>
-				</StatusButton>
-			</div>
+			{!autoSubmit && (
+				<div>
+					<StatusButton
+						type="submit"
+						status={isSubmitting ? 'pending' : status}
+						className="flex w-full items-center justify-center"
+						size="sm"
+					>
+						<Icon name="magnifying-glass" size="sm" />
+						<span className="sr-only">Search</span>
+					</StatusButton>
+				</div>
+			)}
 		</Form>
 	)
 }
