@@ -96,7 +96,7 @@ export const extendedTheme = {
 		'6xl': 'calc(var(--radius) * 5.5)',
 		'5xl': 'calc(var(--radius) * 5)',
 		'4xl': 'calc(var(--radius) * 4.5)',
-		// '3xl': 'calc(var(--radius) * 4)',
+		'3xl': 'calc(var(--radius) * 4)',
 		// '2xl': 'calc(var(--radius) * 3)',
 		// 'xl-to-2xl': 'calc(var(--radius) * 2.25)',
 		// xl: 'calc(var(--radius) * 2)',

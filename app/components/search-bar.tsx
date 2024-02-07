@@ -12,12 +12,18 @@ export function SearchBar({
 	autoFocus = false,
 	autoSubmit = false, //also hides the search status button if True
 	carModelUrl,
+	placeholder = "search",
+	classList,
+	inputClassList,
 }: {
 	actionUrl: '' | 'search' | 'brands' | 'admin/users' | 'pages' | 'carmodels'
 	status: 'idle' | 'pending' | 'success' | 'error'
 	autoFocus?: boolean
 	autoSubmit?: boolean
 	carModelUrl?: string
+	placeholder?: string
+	classList?: string
+	inputClassList?: string
 }) {
 	const id = useId()
 	const additionalActionRoute = carModelUrl ? '/' + carModelUrl : ''
@@ -41,7 +47,7 @@ export function SearchBar({
 			className="flex flex-wrap items-center justify-center gap-2"
 			onChange={e => autoSubmit && handleFormChange(e.currentTarget)}
 		>
-			<div className="flex-1">
+			<div className={classList}>
 				<Label htmlFor={id} className="sr-only">
 					Search
 				</Label>
@@ -50,8 +56,8 @@ export function SearchBar({
 					name="search"
 					id={id}
 					defaultValue={searchParams.get('search') ?? ''}
-					placeholder="Search"
-					className="w-full"
+					placeholder={placeholder}
+					className={inputClassList}
 					autoFocus={autoFocus}
 				/>
 			</div>
