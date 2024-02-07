@@ -32,27 +32,36 @@ export async function loader({ request }: DataFunctionArgs) {
 	}
 
 	const like = `%${searchTerm ?? ''}%`
+	const likeParts = searchTerm.split(' ').map(part => `%${part}%`)
 
+	// TODO: in future, extend search params to look for individual string parts - e.g. "500 speciale" and "speciale 500" should find the same item.. (TBD)
 	const rawSearchResults = await prisma.$queryRaw`
-      SELECT 
-        m.id, 
-        m.url, 
-        m.title, 
-        'CarModel' as type,
-        b.title as carBrandTitle
-      FROM CarModel m
-      JOIN CarBrand b ON m.carBrandId = b.id
-      WHERE m.title LIKE ${like} OR m.url LIKE ${like}
-      UNION
-      SELECT id, url, title, 'CarBrand' as type, NULL as carBrandTitle
-      FROM CarBrand
-      WHERE title LIKE ${like}
-      UNION
-      SELECT id, url, name as title, 'Dealer' as type, NULL as carBrandTitle
-      FROM Dealer
-      WHERE name LIKE ${like}
-      LIMIT 20
-    `
+		SELECT 
+			m.id, 
+			m.url, 
+			m.title, 
+			'CarModel' as type,
+			b.title as carBrandTitle
+		FROM CarModel m
+		JOIN CarBrand b ON m.carBrandId = b.id
+			WHERE (m.visibility = true)
+			AND (
+				m.title LIKE ${like}
+				OR m.url LIKE ${like}
+				OR m.carBrandId LIKE ${like}
+				OR m.carBrandId LIKE ${likeParts[0]} AND m.title LIKE ${likeParts[1]}
+				OR m.title LIKE ${likeParts[0]} AND m.carBrandId LIKE ${likeParts[1]}
+			)
+		UNION
+		SELECT id, url, title, 'CarBrand' as type, NULL as carBrandTitle
+		FROM CarBrand
+			WHERE (visibility = true AND title LIKE ${like})
+		UNION
+		SELECT id, url, name as title, 'Dealer' as type, NULL as carBrandTitle
+		FROM Dealer
+			WHERE name LIKE ${like}
+		LIMIT 20
+	`;
 
 	const result = SearchResultsSchema.safeParse(rawSearchResults)
 	if (!result.success) {
@@ -157,7 +166,7 @@ export default function Index() {
 														className="flex flex-col items-center justify-center rounded-lg bg-muted px-5 py-8 transition duration-200 hover:bg-highlight hover:text-highlight-foreground"
 													>
 														<span className="overflow-hidden text-ellipsis whitespace-nowrap text-center text-body-md">
-															{result.title}
+															{result.carBrandTitle} {result.title}
 														</span>
 													</Link>
 												</li>

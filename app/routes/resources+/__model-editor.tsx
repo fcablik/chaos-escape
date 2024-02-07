@@ -115,7 +115,7 @@ export async function action({ request, params }: DataFunctionArgs) {
 					? carModelFacility[0].map(facilityId => ({ id: facilityId }))
 					: [],
 			},
-			carBrandId: carBrandId,
+			carBrandId,
 		},
 		update: {
 			url,
@@ -129,6 +129,7 @@ export async function action({ request, params }: DataFunctionArgs) {
 					? carModelFacility[0].map(facilityId => ({ id: facilityId }))
 					: [],
 			},
+			carBrandId,
 		},
 	})
 
