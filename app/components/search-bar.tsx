@@ -10,7 +10,7 @@ export function SearchBar({
 	actionUrl,
 	status,
 	autoFocus = false,
-	autoSubmit = false, //hides the search status button if True
+	autoSubmit = false, //also hides the search status button if True
 	carModelUrl,
 }: {
 	actionUrl: '' | 'search' | 'brands' | 'admin/users' | 'pages' | 'carmodels'

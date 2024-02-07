@@ -1,13 +1,21 @@
 import { json, type DataFunctionArgs, type MetaFunction } from '@remix-run/node'
-import { Link, useLoaderData, useSearchParams } from '@remix-run/react'
+import {
+	Link,
+	redirect,
+	useLoaderData,
+	useNavigate,
+	useSearchParams,
+} from '@remix-run/react'
 import { useMemo } from 'react'
 import { z } from 'zod'
 import { LogoChaosEscape } from '#app/components/chaos-escape-logo.tsx'
 import { ErrorList } from '#app/components/forms.tsx'
+import { modalBackDropOverMenuClassList } from '#app/components/modal-backdrop.tsx'
 import { SearchBar } from '#app/components/search-bar.tsx'
 import { Button } from '#app/components/ui/button.tsx'
 import { prisma } from '#app/utils/db.server.ts'
 import { cn, useDelayedIsPending } from '#app/utils/misc.tsx'
+import { useRedirectWithScrollToTop } from '#app/components/modal-animation.tsx'
 
 const SearchResultSchema = z.object({
 	id: z.string(),
@@ -76,6 +84,11 @@ export default function Index() {
 		[searchParams],
 	)
 
+	const navigate = useNavigate()
+	const closeSearchBackdrop = () => {
+		navigate('/')
+	}
+
 	return (
 		<div className="hp-custom-height mx-auto flex flex-col justify-center bg-[url(/img/bg-hp-min.png)] bg-cover bg-center text-center text-white">
 			<h1 className="hidden">Chaos Escape</h1>
@@ -100,7 +113,16 @@ export default function Index() {
 
 				<div className="mx-auto mb-4 max-w-[400px] text-foreground">
 					<div className="w-full text-center max-md:px-4">
-						<div className="relative w-full max-w-[700px]">
+						{data.status === 'idle'
+							? searchTerm !== '' && (
+									<div
+										onClick={closeSearchBackdrop}
+										className={modalBackDropOverMenuClassList}
+									/>
+							  )
+							: null}
+
+						<div className="relative z-4001 w-full max-w-[700px]">
 							<SearchBar
 								actionUrl=""
 								status={data.status}
@@ -108,12 +130,12 @@ export default function Index() {
 								autoSubmit
 							/>
 
-							<div className="absolute w-full">
+							<div className="absolute mt-2 w-full md:mt-3">
 								{data.status === 'idle' ? (
 									data.searchResults && data.searchResults.length ? (
 										<ul
 											className={cn(
-												'mt-2 flex w-full flex-col gap-2 rounded-xl bg-background p-4 delay-200',
+												'no-scrollbar flex max-h-[420px] w-full flex-col gap-2 overflow-y-scroll rounded-xl bg-background p-4 delay-200',
 												{
 													'opacity-50': isPending,
 												},
@@ -145,7 +167,7 @@ export default function Index() {
 										</ul>
 									) : (
 										searchTerm !== '' && (
-											<div className="mt-2 flex w-full flex-col gap-2 rounded-xl bg-background p-4 delay-200">
+											<div className="flex w-full flex-col gap-2 rounded-xl bg-background p-4 delay-200">
 												<p className="px-5 py-8">
 													No results for "{searchTerm}" found.
 												</p>
