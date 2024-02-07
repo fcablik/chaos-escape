@@ -4,7 +4,10 @@ import { Spacer } from '#app/components/spacer.tsx'
 import { Button } from '#app/components/ui/button.tsx'
 import { Icon } from '#app/components/ui/icon.tsx'
 import { prisma } from '#app/utils/db.server.ts'
-import { generateShortString, useDoubleCheckInsideMap } from '#app/utils/misc.tsx'
+import {
+	generateShortString,
+	useDoubleCheckInsideMap,
+} from '#app/utils/misc.tsx'
 
 export async function loader() {
 	const carModels = await prisma.carModel.findMany({
@@ -16,8 +19,8 @@ export async function loader() {
 			carBrand: {
 				select: {
 					url: true,
-				}
-			}
+				},
+			},
 		},
 	})
 	if (!carModels) {
@@ -33,7 +36,7 @@ export async function action({ request }: DataFunctionArgs) {
 	if (carModelId) {
 		await duplicateCarModel(carModelId)
 	} else {
-		return json({ status: 'error' })	
+		return json({ status: 'error' })
 	}
 
 	return json({ status: 'success' })
@@ -48,7 +51,8 @@ async function duplicateCarModel(carModelId: string) {
 		throw new Error('CarModel not found')
 	}
 
-	const randomString = 'duplicated-' + carModel.title + '-' + generateShortString(4)
+	const randomString =
+		'duplicated-' + carModel.title + '-' + generateShortString(4)
 	await prisma.carModel.create({
 		data: {
 			...carModel,
@@ -76,10 +80,6 @@ export default function AdminCarModelsIndex() {
 				<div className="mt-8 flex gap-5 max-sm:justify-center">
 					<Link to="/admin/models/createnew">
 						<Button variant="secondary">create new</Button>
-					</Link>
-
-					<Link to={"/brands/" + data.carModels[0].carBrand.url} target="_blank">
-						<Button variant="outline">live models list</Button>
 					</Link>
 
 					<Link to="facility">
