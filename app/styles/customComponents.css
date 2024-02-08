@@ -1,6 +1,6 @@
 
 /* full screen minus (-) height of header */
-.hp-custom-height {
+.custom-full-height-minus-header {
 	height: calc(100vh - 60px)
 }
 .main-custom-height {

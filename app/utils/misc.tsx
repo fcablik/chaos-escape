@@ -426,3 +426,10 @@ export function generateShortString(length: number) {
 export function isNumberOdd(num: number) {
 	return num % 2
 }
+
+export function stripLeadingSlash(actionUrl: string): string {
+	if (actionUrl.startsWith('/')) {
+		return actionUrl.substring(1)
+	}
+	return actionUrl
+}

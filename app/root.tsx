@@ -85,6 +85,16 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	]
 }
 
+const SearchResultSchema = z.object({
+	id: z.string(),
+	url: z.string(),
+	title: z.string().nullable(),
+	type: z.enum(['CarBrand', 'CarModel', 'Dealer']),
+	carBrandTitle: z.string().nullable(),
+})
+
+const SearchResultsSchema = z.array(SearchResultSchema)
+
 export async function loader({ request }: DataFunctionArgs) {
 	const timings = makeTimings('root loader')
 	const userId = await time(() => getUserId(request), {
@@ -127,6 +137,109 @@ export async function loader({ request }: DataFunctionArgs) {
 	const honeyProps = honeypot.getInputProps()
 	const [csrfToken, csrfCookieHeader] = await csrf.commitToken()
 
+	const searchTerm = new URL(request.url).searchParams.get('search')
+	//return all dat //!+ empty seach
+	if (!searchTerm) {
+		return json(
+			{
+				user,
+				requestInfo: {
+					hints: getHints(request),
+					origin: getDomainUrl(request),
+					path: new URL(request.url).pathname,
+					userPrefs: {
+						theme: getTheme(request),
+					},
+				},
+				ENV: getEnv(),
+				toast,
+				confettiId,
+				honeyProps,
+				csrfToken,
+
+				//empty search
+				status: 'error',
+				searchResults: null,
+			},
+			{
+				headers: combineHeaders(
+					{ 'Server-Timing': timings.toString() },
+					toastHeaders,
+					confettiHeaders,
+					csrfCookieHeader ? { 'set-cookie': csrfCookieHeader } : null,
+				),
+			},
+		)
+	}
+
+	const like = `%${searchTerm ?? ''}%`
+	const likeParts = searchTerm.split(' ').map(part => `%${part}%`)
+
+	// TODO: in future, extend search params to look for individual string parts - e.g. "500 speciale" and "speciale 500" should find the same item.. (TBD)
+	const rawSearchResults = await prisma.$queryRaw`
+		SELECT 
+			m.id, 
+			m.url, 
+			m.title, 
+			'CarModel' as type,
+			b.title as carBrandTitle
+		FROM CarModel m
+		JOIN CarBrand b ON m.carBrandId = b.id
+			WHERE (m.visibility = true)
+			AND (
+				m.title LIKE ${like}
+				OR m.url LIKE ${like}
+				OR m.carBrandId LIKE ${like}
+				OR m.carBrandId LIKE ${likeParts[0]} AND m.title LIKE ${likeParts[1]}
+				OR m.title LIKE ${likeParts[0]} AND m.carBrandId LIKE ${likeParts[1]}
+			)
+		UNION
+		SELECT id, url, title, 'CarBrand' as type, NULL as carBrandTitle
+		FROM CarBrand
+			WHERE (visibility = true AND title LIKE ${like})
+		UNION
+		SELECT id, url, name as title, 'Dealer' as type, NULL as carBrandTitle
+		FROM Dealer
+			WHERE name LIKE ${like}
+		LIMIT 20
+	`
+
+	const result = SearchResultsSchema.safeParse(rawSearchResults)
+	//return all dat //!+ empty seach
+	if (!result.success) {
+		return json(
+			{
+				user,
+				requestInfo: {
+					hints: getHints(request),
+					origin: getDomainUrl(request),
+					path: new URL(request.url).pathname,
+					userPrefs: {
+						theme: getTheme(request),
+					},
+				},
+				ENV: getEnv(),
+				toast,
+				confettiId,
+				honeyProps,
+				csrfToken,
+
+				//empty search //TODOerror instead of idle?
+				status: 'idle',
+				searchResults: null,
+			},
+			{
+				headers: combineHeaders(
+					{ 'Server-Timing': timings.toString() },
+					toastHeaders,
+					confettiHeaders,
+					csrfCookieHeader ? { 'set-cookie': csrfCookieHeader } : null,
+				),
+			},
+		)
+	}
+
+	//return all dat //!+seach
 	return json(
 		{
 			user,
@@ -143,6 +256,10 @@ export async function loader({ request }: DataFunctionArgs) {
 			confettiId,
 			honeyProps,
 			csrfToken,
+
+			//search data
+			status: 'idle',
+			searchResults: result.data,
 		},
 		{
 			headers: combineHeaders(
@@ -240,9 +357,21 @@ function App() {
 	const { id } = matches[matches.length - 1]
 	const routeAdmin = id.includes('admin')
 
+	const status: 'error' | 'idle' | 'success' | 'pending' =
+		data.status === 'error' ||
+		data.status === 'success' ||
+		data.status === 'pending'
+			? data.status
+			: 'idle'
+
+	const searchData = {
+		status: status,
+		searchResults: data.searchResults,
+	}
+
 	return (
 		<Document nonce={nonce} theme={theme} env={data.ENV}>
-			<HeaderBase routeAdmin={routeAdmin} />
+			<HeaderBase searchData={searchData} routeAdmin={routeAdmin} />
 
 			<div className="main-custom-height bg-main-gradient-light dark:bg-main-gradient-dark">
 				<Outlet />

@@ -12,11 +12,11 @@ export function SearchBar({
 	autoFocus = false,
 	autoSubmit = false, //also hides the search status button if True
 	carModelUrl,
-	placeholder = "search",
+	placeholder = 'search',
 	classList,
 	inputClassList,
 }: {
-	actionUrl: '' | 'search' | 'brands' | 'admin/users' | 'pages' | 'carmodels'
+	actionUrl: string //'' | 'search' | 'brands' | 'admin/users' | 'pages' | 'carmodels'
 	status: 'idle' | 'pending' | 'success' | 'error'
 	autoFocus?: boolean
 	autoSubmit?: boolean
