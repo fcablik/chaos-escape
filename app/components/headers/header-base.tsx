@@ -54,7 +54,7 @@ export function HeaderBase({
 
 	return (
 		<header className={cn('w-full max-md:absolute', routeAdmin && 'max-lg:hidden')}>
-			<div className="fixed z-9999 w-full max-md:bottom-2 md:top-0">
+			<div className="fixed z-6000 w-full max-md:bottom-2 md:top-0">
 				<div
 					className={cn(
 						'bg-background max-md:mx-2 max-md:rounded-xl',

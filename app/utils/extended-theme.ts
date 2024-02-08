@@ -80,6 +80,7 @@ export const extendedTheme = {
 		'2/3': '66.66%',
 		'1/4': '25%',
 		'3/4': '75%',
+		'1/5': '20%',
 		'2/5': '40%',
 		'3/5': '60%',
 	},
@@ -178,6 +179,10 @@ export const extendedTheme = {
 		'4001': '4001',
 		'5000': '5000',
 		'5001': '5001',
+		'6000': '6000',
+		'6001': '6001',
+		'9990': '9990',
+		'9991': '9991',
 		'9999': '9999',
 	},
 	backgroundImage: {
@@ -194,5 +199,8 @@ export const extendedTheme = {
 	},
 	backdropBlur: {
 		xs: '2px',
+	},
+	spacing: {
+		'1/5': '20%',
 	},
 } satisfies Config['theme']

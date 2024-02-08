@@ -16,7 +16,6 @@ import {
 	Scripts,
 	ScrollRestoration,
 	useLoaderData,
-	useLocation,
 	useMatches,
 } from '@remix-run/react'
 import { withSentry } from '@sentry/remix'
@@ -24,7 +23,6 @@ import { AuthenticityTokenProvider } from 'remix-utils/csrf/react'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
 import { z } from 'zod'
 import { Confetti } from './components/confetti.tsx'
-import { CustomScrollRestoration } from './components/custom-scroll-restoration.tsx'
 import { GeneralErrorBoundary } from './components/error-boundary.tsx'
 import { FooterBase } from './components/footers/footer-base.tsx'
 import { HeaderBase } from './components/headers/header-base.tsx'
@@ -158,7 +156,7 @@ export async function loader({ request }: DataFunctionArgs) {
 				csrfToken,
 
 				//empty search
-				status: 'error',
+				status: 'idle',
 				searchResults: null,
 			},
 			{
@@ -313,9 +311,6 @@ function Document({
 	theme?: Theme
 	env?: Record<string, string>
 }) {
-	const { pathname } = useLocation()
-	const paths = ['/', '', '/?search=']
-
 	return (
 		<html lang="en" className={`${theme} h-full overflow-x-hidden`}>
 			<head>
@@ -336,11 +331,7 @@ function Document({
 						__html: `window.ENV = ${JSON.stringify(env)}`,
 					}}
 				/>
-				{paths.includes(pathname) ? (
-					<CustomScrollRestoration />
-				) : (
-					<ScrollRestoration nonce={nonce} />
-				)}
+				<ScrollRestoration nonce={nonce} />
 				<Scripts nonce={nonce} />
 				<LiveReload nonce={nonce} />
 			</body>
